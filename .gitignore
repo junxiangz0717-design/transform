@@ -29,3 +29,9 @@ qtcreator-*
 COLCON_IGNORE
 AMENT_IGNORE
 
+# VS Code 相关忽略规则
+.vscode/
+.vs/
+*.code-workspace
+.history/
+
