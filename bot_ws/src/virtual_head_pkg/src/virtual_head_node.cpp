@@ -1,0 +1,78 @@
+#include <memory>
+#include <chrono>
+#include <cmath>
+#include "rclcpp/rclcpp.hpp"
+#include "geometry_msgs/msg/transform_stamped.hpp"
+#include "geometry_msgs/msg/twist.hpp"
+#include "tf2_ros/transform_listener.h"
+#include "tf2_ros/buffer.h"
+#include "tf2_ros/transform_broadcaster.h"
+#include "tf2/utils.h"
+#include "tf2_geometry_msgs/tf2_geometry_msgs.hpp"
+
+using namespace std::chrono_literals;
+
+class VirtualHeadNode : public rclcpp::Node {
+public:
+    VirtualHeadNode() : Node("virtual_head_node") {
+        // 初始化 TF 缓冲与监听器
+        tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
+        tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
+        tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
+
+        // 订阅虚拟系指令速度
+        vel_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
+            "/cmd_vel_virtual", 10, std::bind(&VirtualHeadNode::vel_callback, this, std::placeholders::_1));
+
+        // 发布实际到底盘的速度
+        vel_pub_ = this->create_publisher<geometry_msgs::msg::Twist>("/cmd_vel", 10);
+
+        // 定时发布动态 TF
+        timer_ = this->create_wall_timer(20ms, std::bind(&VirtualHeadNode::publish_virtual_tf, this));
+        yaw_real_ = 0.0;
+    }
+
+private:
+    void vel_callback(const geometry_msgs::msg::Twist::SharedPtr msg) {
+        auto real_vel = geometry_msgs::msg::Twist();
+        // 角度差逻辑：真实底盘相对于 ODOM 的偏航角
+        double angle = -yaw_real_; 
+        // 速度投影分解
+        real_vel.linear.x = msg->linear.x * std::cos(angle) - msg->linear.y * std::sin(angle);
+        real_vel.linear.y = msg->linear.x * std::sin(angle) + msg->linear.y * std::cos(angle);
+        real_vel.angular.z = msg->angular.z;
+        vel_pub_->publish(real_vel);
+    }
+
+    void publish_virtual_tf() {
+        try {
+            // 获取 odom -> base_link 变换
+            auto t = tf_buffer_->lookupTransform("odom", "base_link", tf2::TimePointZero);
+            yaw_real_ = tf2::getYaw(t.transform.rotation);
+
+            geometry_msgs::msg::TransformStamped v_t;
+            v_t.header.stamp = this->get_clock()->now();
+            v_t.header.frame_id = "odom";
+            v_t.child_frame_id = "virtual_base_link";
+            v_t.transform.translation = t.transform.translation;
+            // 姿态 RPY 设为单位四元数（不随车旋转）
+            v_t.transform.rotation.w = 1.0; 
+            tf_broadcaster_->sendTransform(v_t);
+        } catch (const tf2::TransformException & ex) { return; }
+    }
+
+    std::unique_ptr<tf2_ros::Buffer> tf_buffer_;
+    std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+    std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr vel_sub_;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr vel_pub_;
+    rclcpp::TimerBase::SharedPtr timer_;
+    double yaw_real_;
+};
+
+int main(int argc, char ** argv) {
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<VirtualHeadNode>());
+    rclcpp::shutdown();
+    return 0;
+}
