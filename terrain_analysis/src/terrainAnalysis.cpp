@@ -11,20 +11,16 @@
 #include <nav_msgs/msg/odometry.hpp>
 #include <sensor_msgs/msg/joy.hpp>
 #include <std_msgs/msg/float32.hpp>
-#include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
 
 #include <tf2/LinearMath/Quaternion.h>
 #include <tf2/LinearMath/Matrix3x3.h>
 #include <tf2_ros/transform_broadcaster.hpp>
-#include <tf2_ros/buffer.h>
-#include <tf2_ros/transform_listener.h>
 
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl_conversions/pcl_conversions.h>
-#include <pcl_ros/transforms.hpp>
 
 using namespace std;
 
@@ -36,10 +32,6 @@ public:
         // --- 在 ROS2 节点中声明并加载参数 --- //
         this->declare_parameters();
         this->get_parameters();
-        
-        // TF 监听器
-        tf_buffer_ = std::make_unique<tf2_ros::Buffer>(this->get_clock());
-        tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
 
         // --- 设置订阅者和发布者 --- //
         subOdometry_ = this->create_subscription<nav_msgs::msg::Odometry>(
@@ -74,7 +66,7 @@ private:
     double scanVoxelSize, decayTime, noDecayDis, clearingDis, quantileZ, maxGroundLift;
     double minDyObsDis, minDyObsAngle, minDyObsRelZ, absDyObsRelZThre;
     double minDyObsVFOV, maxDyObsVFOV, vehicleHeight, voxelTimeUpdateThre,minObstacleHeight;
-    double minRelZ, maxRelZ, disRatioZ;
+    double minRelZ, maxRelZ, disRatioZ, minScanDis;
     bool clearingCloud, useSorting, considerDrop, limitGroundLift, clearDyObs, noDataObstacle;
     int minDyObsPointNum, noDataBlockSkipNum, minBlockPointNum, voxelPointUpdateThre;
 
@@ -95,7 +87,6 @@ private:
 
     // --- PCL点云对象指针 --- //
     pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloud{new pcl::PointCloud<pcl::PointXYZI>()};
-    pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloudInOdom{new pcl::PointCloud<pcl::PointXYZI>()};
     pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloudCrop{new pcl::PointCloud<pcl::PointXYZI>()};
     pcl::PointCloud<pcl::PointXYZI>::Ptr laserCloudDwz{new pcl::PointCloud<pcl::PointXYZI>()};
     pcl::PointCloud<pcl::PointXYZI>::Ptr terrainCloud{new pcl::PointCloud<pcl::PointXYZI>()};
@@ -136,8 +127,6 @@ private:
     rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr subClearing_;
     rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr pubLaserCloud_;
     rclcpp::TimerBase::SharedPtr timer_;
-    std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
-    std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
 
     // 1. 声明所有参数并提供默认值
     void declare_parameters()
@@ -168,6 +157,7 @@ private:
         this->declare_parameter<double>("voxelTimeUpdateThre", 2.0);
         this->declare_parameter<double>("minRelZ", -1.5);
         this->declare_parameter<double>("maxRelZ", 0.2);
+        this->declare_parameter<double>("minScanDis", 0.4);
         this->declare_parameter<double>("disRatioZ", 0.2);
     }
        
@@ -200,6 +190,7 @@ private:
         this->get_parameter("voxelTimeUpdateThre", voxelTimeUpdateThre);
         this->get_parameter("minRelZ", minRelZ);
         this->get_parameter("maxRelZ", maxRelZ);
+        this->get_parameter("minScanDis", minScanDis);
         this->get_parameter("disRatioZ", disRatioZ);
     }
 
@@ -220,6 +211,7 @@ private:
         vehicleX = odom->pose.pose.position.x;
         vehicleY = odom->pose.pose.position.y;
         vehicleZ = odom->pose.pose.position.z;
+        // RCLCPP_INFO(this->get_logger(), "Odometry: [x: %f, y: %f, z: %f]", vehicleX, vehicleY, vehicleZ);
 
         sinVehicleRoll = sin(vehicleRoll);
         cosVehicleRoll = cos(vehicleRoll);
@@ -250,33 +242,23 @@ private:
             systemInited = true;
         }
 
-        sensor_msgs::msg::PointCloud2 laserCloudInOdom;
-        try {
-            geometry_msgs::msg::TransformStamped transform = tf_buffer_->lookupTransform(
-                "odom", laserCloud2->header.frame_id, laserCloud2->header.stamp, 
-                rclcpp::Duration::from_seconds(0.1));
-            tf2::doTransform(*laserCloud2, laserCloudInOdom, transform);
-        } catch (tf2::TransformException &ex) {
-            RCLCPP_WARN(this->get_logger(), "TF conversion failed: %s", ex.what());
-            return;
-        }
-
         laserCloud->clear();
-        pcl::fromROSMsg(laserCloudInOdom, *laserCloud);
-        // laserCloudInOdom->clear();
-        // pcl_ros::transformPointCloud("odom", *laserCloud, *laserCloudInOdom, *tf_buffer_);
+        pcl::fromROSMsg(*laserCloud2, *laserCloud);
+
         pcl::PointXYZI point;
         laserCloudCrop->clear();
         int laserCloudSize = laserCloud->points.size();
+
         for (int i = 0; i < laserCloudSize; i++) {
-            point = laserCloud->points[i];
-            float dis = sqrt(pow(point.x - vehicleX, 2) + pow(point.y - vehicleY, 2));
-            if (point.z - vehicleZ > minRelZ - disRatioZ * dis &&
-                point.z - vehicleZ < maxRelZ + disRatioZ * dis &&
-                dis < terrainVoxelSize * (terrainVoxelHalfWidth + 1)) {
-                point.intensity = laserCloudTime - systemInitTime;
-                laserCloudCrop->push_back(point);
-            }
+          point = laserCloud->points[i];
+          float dis = sqrt(pow(point.x - vehicleX, 2) + pow(point.y - vehicleY, 2));
+          if (point.z - vehicleZ > minRelZ - disRatioZ * dis &&
+              point.z - vehicleZ < maxRelZ + disRatioZ * dis &&
+              dis >minScanDis &&
+              dis < terrainVoxelSize * (terrainVoxelHalfWidth + 1)) {
+              point.intensity = laserCloudTime - systemInitTime;
+              laserCloudCrop->push_back(point);
+          }
         }
         newlaserCloud = true;
     }

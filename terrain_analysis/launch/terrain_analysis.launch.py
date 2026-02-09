@@ -10,20 +10,20 @@ def generate_launch_description():
         name='terrain_analysis',
         output='screen',
         remappings=[
-            ('/state_estimation', '/odom'),  
-            ('/registered_scan', '/mid360_PointCloud2')
+            ('/state_estimation', '/odin1/odometry'),  
+            ('/registered_scan', '/odin1/cloud_slam')
         ],
         parameters=[
             {'scanVoxelSize': 0.05},
-            {'decayTime': 1.5}, #2.0
-            {'noDecayDis': 4.0},
+            {'decayTime': 2.0 }, #2.0
+            {'noDecayDis': 1.0},
             {'clearingDis': 8.0},
             {'useSorting': True},
             {'quantileZ': 0.10}, #0.25
             {'considerDrop': True},
             {'limitGroundLift': False},
             {'maxGroundLift': 0.15},
-            {'clearDyObs': True},
+            {'clearDyObs': False},
             {'minDyObsDis': 0.3},
             {'minDyObsAngle': 0.0},
             {'minDyObsRelZ': -0.5},
@@ -40,6 +40,7 @@ def generate_launch_description():
             {'voxelTimeUpdateThre': 1.0},
             {'minRelZ': -1.0},
             {'maxRelZ': 1.0},
+            {'minScanDis': 0.85},
             {'disRatioZ': 0.2}
         ]
     )
