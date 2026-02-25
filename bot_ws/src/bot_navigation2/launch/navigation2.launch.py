@@ -13,9 +13,9 @@ def generate_launch_description():
     
     # 创建 Launch 配置
     use_sim_time = launch.substitutions.LaunchConfiguration(
-        'use_sim_time', default='true')
+        'use_sim_time', default='false')
     map_yaml_path = launch.substitutions.LaunchConfiguration(
-        'map', default=os.path.join(bot_navigation2_dir, 'map', 'rmuc_2025_old.yaml'))
+        'map', default=os.path.join(bot_navigation2_dir, 'map', 'qingqing2026.yaml'))
     nav2_param_path = launch.substitutions.LaunchConfiguration(
         'params_file', default=os.path.join(bot_navigation2_dir, 'config', 'nav2_params.yaml'))
 
@@ -29,14 +29,26 @@ def generate_launch_description():
                                              description='Full path to param file to load'),
 
         launch_ros.actions.Node(
+        package='tf2_ros',
+        executable='static_transform_publisher',
+        name='static_transform_publisher',
+        arguments=[
+            '0.86', '1.925', '0',
+            '3.1416', '0', '0',
+            'map',
+            'map_init'
+        ],
+        parameters=[{'use_sim_time': use_sim_time}],
+        ),
+        launch_ros.actions.Node(
             package='tf2_ros',
             executable='static_transform_publisher',
             name='static_transform_publisher',
             arguments=[
-                '0', '0', '0',
-                '0', '0', '0',
-                'map',
-                'odom'
+                '-0.12', '-0.175', '-0.2',
+                '3.1416', '0', '0',
+                'odin1_base_link',
+                'virtual_base_link'
             ],
             parameters=[{'use_sim_time': use_sim_time}],
         ),

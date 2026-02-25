@@ -1,0 +1,101 @@
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "rclcpp/rclcpp.hpp"
+#include "sensor_msgs/msg/point_cloud2.hpp"
+
+// PCL 库头文件
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
+#include <pcl/filters/passthrough.h>
+#include <pcl/filters/voxel_grid.h> // [新增] 降采样头文件
+
+class PointCloudFilter : public rclcpp::Node
+{
+public:
+    PointCloudFilter() : Node("pointcloud_filter_node")
+    {
+        // 声明与获取参数
+        this->declare_parameter<std::string>("input_topic", "/livox/lidar");
+        this->declare_parameter<std::string>("output_topic", "/lidar/points_filtered");
+        this->declare_parameter<double>("min_height", -0.5);
+        this->declare_parameter<double>("max_height", 1.5);
+        this->declare_parameter<double>("min_range", 0.3);
+        this->declare_parameter<double>("max_range", 6.0);
+        // [新增] 降采样体素大小 (单位: 米)
+        this->declare_parameter<double>("voxel_size", 0.05); 
+
+        std::string input_topic = this->get_parameter("input_topic").as_string();
+        std::string output_topic = this->get_parameter("output_topic").as_string();
+        min_height_ = this->get_parameter("min_height").as_double();
+        max_height_ = this->get_parameter("max_height").as_double();
+        min_range_ = this->get_parameter("min_range").as_double();
+        max_range_ = this->get_parameter("max_range").as_double();
+        voxel_size_ = this->get_parameter("voxel_size").as_double();
+
+        RCLCPP_INFO(this->get_logger(), "Voxel Size (Downsample): %.3f m", voxel_size_);
+
+        publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>(output_topic, 10);
+        subscription_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
+            input_topic, 10,
+            std::bind(&PointCloudFilter::topic_callback, this, std::placeholders::_1));
+    }
+
+private:
+    void topic_callback(const sensor_msgs::msg::PointCloud2::SharedPtr msg)
+    {
+        // --- 1. ROS msg -> PCL PointCloud ---
+        pcl::PointCloud<pcl::PointXYZI>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZI>);
+        pcl::fromROSMsg(*msg, *pcl_cloud);
+        if (pcl_cloud->empty()) return;
+
+        // --- 2. PCL 高度过滤 (PassThrough) ---
+        pcl::PassThrough<pcl::PointXYZI> pass;
+        pass.setInputCloud(pcl_cloud);
+        pass.setFilterFieldName("z");
+        pass.setFilterLimits(min_height_, max_height_);
+        pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_height_filtered(new pcl::PointCloud<pcl::PointXYZI>);
+        pass.filter(*cloud_height_filtered);
+
+        // --- 3. 距离过滤 (0.3m - 6.0m) ---
+        pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_range_filtered(new pcl::PointCloud<pcl::PointXYZI>);
+        double min_range_sq = min_range_ * min_range_;
+        double max_range_sq = max_range_ * max_range_;
+
+        for (const auto& point : cloud_height_filtered->points) {
+            float dist_sq = point.x * point.x + point.y * point.y;
+            if (dist_sq >= min_range_sq && dist_sq <= max_range_sq) {
+                cloud_range_filtered->points.push_back(point);
+            }
+        }
+
+        // --- 4. [新增] 降采样 (VoxelGrid) ---
+        pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_downsampled(new pcl::PointCloud<pcl::PointXYZI>);
+        pcl::VoxelGrid<pcl::PointXYZI> sor;
+        sor.setInputCloud(cloud_range_filtered);
+        // 设置体素栅格的大小 (x, y, z 分别对应立方体的边长)
+        sor.setLeafSize(voxel_size_, voxel_size_, voxel_size_);
+        sor.filter(*cloud_downsampled);
+
+        // --- 5. 设置属性并发布 ---
+        sensor_msgs::msg::PointCloud2 output_msg;
+        pcl::toROSMsg(*cloud_downsampled, output_msg);
+        output_msg.header = msg->header; // 使用原始数据的 frame_id 和时间戳
+        publisher_->publish(output_msg);
+    }
+
+    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr subscription_;
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_;
+    
+    double min_height_, max_height_, min_range_, max_range_, voxel_size_;
+};
+
+int main(int argc, char *argv[])
+{
+    rclcpp::init(argc, argv);
+    rclcpp::spin(std::make_shared<PointCloudFilter>());
+    rclcpp::shutdown();
+    return 0;
+}

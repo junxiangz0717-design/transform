@@ -1,0 +1,5 @@
+add_subdirectory(serial_port)
+set(CMAKE_BUILD_TYPE Debug)
+add_library(serial_data src/serial_data.cpp)
+target_include_directories(serial_data PUBLIC include)
+target_link_libraries(serial_data PUBLIC serial_port)
