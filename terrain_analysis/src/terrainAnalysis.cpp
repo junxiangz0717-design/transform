@@ -235,7 +235,8 @@ private:
     // 激光点云回调函数
     void laserCloudHandler(const sensor_msgs::msg::PointCloud2::SharedPtr laserCloud2)
     {
-        laserCloudTime = rclcpp::Time(laserCloud2->header.stamp).seconds();;
+        laserCloudTime = rclcpp::Time(laserCloud2->header.stamp).seconds();
+        RCLCPP_INFO(this->get_logger(), "Received laser cloud with timestamp: %f", laserCloudTime);
 
         if (!systemInited) {
             systemInitTime = laserCloudTime;
@@ -698,6 +699,7 @@ private:
         sensor_msgs::msg::PointCloud2 terrainCloud2;
         pcl::toROSMsg(*terrainCloudElev, terrainCloud2);
         terrainCloud2.header.stamp = rclcpp::Time(laserCloudTime);
+        RCLCPP_INFO(this->get_logger(), "Publishing terrain cloud with timestamp: %f", laserCloudTime);
         terrainCloud2.header.frame_id = "odom";
         pubLaserCloud_->publish(terrainCloud2);
     }
