@@ -21,6 +21,9 @@ def generate_launch_description():
             package='rqt_gui',
             executable='rqt_gui',
             name='rqt_gui',
-            output='screen'
+            output='screen',
+            additional_env={
+                'QT_QPA_PLATFORM': 'xcb',
+            }
         )
     ])

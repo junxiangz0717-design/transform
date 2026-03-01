@@ -71,8 +71,8 @@ inline std::string decision_package_path_node()
 inline std::string decision_package_path_xml()
 {
     auto share = getPackageShareDir();
-    if(!share.empty()) return share + "/XML";
-    return getExecutableDirectory() + "/../../../decision_process/XML";
+    if(!share.empty()) return share + "/XML/";
+    return getExecutableDirectory() + "/../../../decision_process/XML/";
 }
 
 inline std::string decision_package_path_semantic_map_xml()

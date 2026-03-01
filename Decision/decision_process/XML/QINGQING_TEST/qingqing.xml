@@ -13,7 +13,7 @@
                 </Sequence>
             </RunOnce>
              
-            <SetStrategy_qingqing name="电控通过拨杆设置比赛策略标志位"
+            <SetStrategy_UL name="电控通过拨杆设置比赛策略标志位"
                                   choose_strategy="{choose_strategy}"/>
             <ModeBaseTripod     name="开关小陀螺"/>
 
@@ -27,15 +27,9 @@
                             GameStart="{GameStart}" />
         
             <CheckWaitRespawn name="等待复活检查"/> 
-            <CheckInstruction name="指令检查"
-                              instruction="{instruction}"/>
             <CheckHp    name="血量检查"/>
-            <CheckAmmo_C  name="弹药检查"
-                          ammo_state="{ammo_state}"/>
             <CheckHit name="受击检查"/>
-            <SetStyle name="设置比赛风格"/>
             <SetTarget  name="锁定目标"
-                        ammo_state="{ammo_state}"
                         need_turn_big_yaw="{need_turn_big_yaw}"
                         have_target="{have_target}"/>
             <ScanToArea name="自适应搜寻"
