@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypelayout="1.0"?>
+<package format="3">
+  <name>decision_process</name>
+  <version>0.0.0</version>
+  <description>The decision package for RoboMaster behavior tree based decision making</description>
+
+  <maintainer email="tt@todo.todo">tt</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- ROS2 核心依赖 -->
+  <depend>rclcpp</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+
+  <!-- 自定义消息包 -->
+  <depend>msg_process</depend>
+
+  <!-- BehaviorTree 依赖 -->
+  <depend>behaviortree_cpp</depend>
+
+  <!-- 其他第三方库依赖 -->
+  <depend>opencv</depend>
+  <depend>yaml-cpp</depend>
+  <build_depend>openmp</build_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

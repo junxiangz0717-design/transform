@@ -1,0 +1,31 @@
+tree_xml:    
+## /QINGQING_TEST/qingqing.xml
+## /RMUC/RMUC.xml
+## /RMUL/RMUL.xml
+  xml_name: "QINGQING_TEST/qingqing.xml"              #xml路径
+big_yaw_az : -0.9                             #小yawa旋转速度
+HZ: 100                                        #休眠时间
+detector_turn_az: -2.5                        #感知转头速度
+
+
+is_skip_gamestart: false                      #是否跳过比赛开始
+is_accept_serial_hp: true                #是否启用串口hp消息
+
+
+is_scan: false                                #是否开启扇形扫描
+
+max_scan_offset_yaw: 1.4                      #最大角补偿
+min_scan_offset_yaw: -1.4                     #最小角补偿
+
+pursuit_delay: 250                            #追击发点间隔
+
+check_connect: false                         #是否自检自瞄
+
+detector_turn_time: 600                       #感知转头时间
+detector_again: 3000                           #感知转头间隔
+
+priority: 0                                   #优先级
+score_list_0: [150, 120, 60, 60, 90, 180, 30] #英雄优先               
+score_list_1: [120, 150, 90, 90, 60, 180, 30] #工程优先          
+score_list_2: [120, 90, 60, 60, 150, 180, 30] #前哨优先           
+score_list_3: [60, 0, 0, 0, 0, 150, 0]   

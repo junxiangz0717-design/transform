@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root BTCPP_format="4" >
+<!--主树-->
+    <BehaviorTree ID="MainTree">
+        <MultiAsyncReactiveSequence name="决策循环进入点">
+            <RunOnce>
+                <Sequence name="初始化">
+                    <Script name="初始化比赛开始、补血状态、比赛风格、巡逻状态标志位"
+                                    code="GameStart:=false"/>
+                    <SetCheckHpParam    name="设置血量检查参数"
+                                        hp_threshold="200"
+                                        add_to_target_hp="400"/>
+                </Sequence>
+            </RunOnce>
+             
+            <SetStrategy_qingqing name="电控通过拨杆设置比赛策略标志位"
+                                  choose_strategy="{choose_strategy}"/>
+            <ModeBaseTripod     name="开关小陀螺"/>
+
+            <CheckGameStart name="比赛开始检查" 
+                            Online="{Online}"
+                            GameStart="{GameStart}"
+                            _skipIf="GameStart"/>
+            <IfGameEndThenBack name="比赛结束行为"
+                            home_x="0.0"
+                            home_y="0.0"
+                            GameStart="{GameStart}" />
+        
+            <CheckWaitRespawn name="等待复活检查"/> 
+            <CheckInstruction name="指令检查"
+                              instruction="{instruction}"/>
+            <CheckHp    name="血量检查"/>
+            <CheckAmmo_C  name="弹药检查"
+                          ammo_state="{ammo_state}"/>
+            <CheckHit name="受击检查"/>
+            <SetStyle name="设置比赛风格"/>
+            <SetTarget  name="锁定目标"
+                        ammo_state="{ammo_state}"
+                        need_turn_big_yaw="{need_turn_big_yaw}"
+                        have_target="{have_target}"/>
+            <ScanToArea name="自适应搜寻"
+                        have_target="{have_target}"/>
+            
+        </MultiAsyncReactiveSequence>
+    </BehaviorTree>
+
+    <!-- 攻击测试 -->
+    <BehaviorTree ID="Attack" name="攻击">
+            <Attack name="攻击"
+                    have_target="{have_target}"
+                    need_turn_big_yaw="{need_turn_big_yaw}"/>
+    </BehaviorTree>
+
+    <!-- 追击测试 -->
+    <BehaviorTree ID="PURSUITING" name="追击">
+        <MultiAsyncReactiveSequence >
+            <ForceSuccess>
+                <Fallback> 
+                    <CheckCondition name="判断是否跳过移动"
+                                    value="{value}"/>
+                    <Timeout name="移动超时器" msec="5000">
+                        <Sequence>
+                            <Adaptive name="自适应距离"
+                                      goal_points="{goal_points}"/>
+                            <MoveToPoint_pursuit name="前往追击点" 
+                                                 goal_points="{goal_points}"/> 
+                        </Sequence>
+                    </Timeout>
+                </Fallback>
+            </ForceSuccess>
+
+            <Fallback>
+                <Sequence>
+                    <Script name="跳过移动" code="value = 1"/>
+                    <TimerOut time_="500"
+                              type="0"/>
+                </Sequence>
+                
+                <Sequence>
+                    <Script name="允许移动" code="value = 0"/>
+                </Sequence>
+            </Fallback>
+        </MultiAsyncReactiveSequence>
+    </BehaviorTree> 
+</root>
