@@ -18,9 +18,12 @@ def generate_launch_description():
             emulate_tty=True,
         ),
         Node(
-            package='rqt_gui',
-            executable='rqt_gui',
-            name='rqt_gui',
-            output='screen'
+            package='rqt_reconfigure',
+            executable='rqt_reconfigure',
+            name='rqt_reconfigure',
+            output='screen',
+            additional_env={
+                'QT_QPA_PLATFORM': 'xcb',
+            }
         )
     ])
