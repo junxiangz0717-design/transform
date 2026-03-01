@@ -1,0 +1,4 @@
+<launch>
+    <node name="receive_process" pkg="serial_process" type="receive_process"  output="screen"  respawn="true"/>
+    <node name="send_process" pkg="serial_process" type="send_process"  output="screen" respawn="true"/>
+</launch>

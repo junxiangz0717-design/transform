@@ -228,7 +228,7 @@ inline void MessagePublisher::set_posture(int posture)
         if (posture_timer.is_timeout() || is_first_posture_)
         {
             decision_send_data_.posture = posture;
-            std::cout << "设置姿态为：" << posture << std::endl;
+            std::cout << "更换姿态为：" << posture << std::endl;
             posture_timer.reset();
             is_first_posture_ = false;
         }

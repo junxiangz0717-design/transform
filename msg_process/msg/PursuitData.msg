@@ -1,0 +1,12 @@
+uint8 agent_x
+uint8 agent_y
+uint8 enemy_x
+uint8 enemy_y
+uint8 target_x
+uint8 target_y
+float32 agent_real_x
+float32 agent_real_y
+float32 enemy_real_x
+float32 enemy_real_y
+float32 target_real_x
+float32 target_real_y

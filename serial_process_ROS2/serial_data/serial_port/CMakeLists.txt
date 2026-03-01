@@ -1,0 +1,2 @@
+add_library(serial_port src/serial_port.cpp)
+target_include_directories(serial_port PUBLIC include)
