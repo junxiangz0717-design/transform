@@ -53,8 +53,8 @@ public:
         default:
             break;
         }
-        cout << static_cast<int>(DD.targets.autoaim_target) << endl;
-        cout << static_cast<int>(DD.targets.pre_target) << endl;
+        cout << "当前自瞄目标编号(autoaim_target): " << static_cast<int>(DD.targets.autoaim_target) << endl;
+        cout << "当前记忆目标编号(pre_target): " << static_cast<int>(DD.targets.pre_target) << endl;
         if (DD.targets.autoaim_target == 10)
         {
             cout << "target: 神符" << endl;
@@ -65,7 +65,7 @@ public:
             DD.targets.pre_target != Target::NONE && DD.is_approachable(DD.targets.pre_target) && !DD.autoaim_dropped_frames.is_timeout()) // 目标消失
         {
             cout << "自瞄目标丢帧或消失，且目标未阵亡，保持追击目标状态" << endl;
-            cout << "target:" << DD.targets.autoaim_target << endl;
+            cout << "当前自瞄(autoaim_target): " << static_cast<int>(DD.targets.autoaim_target) << " 保持追击目标(pre_target)编号: " << static_cast<int>(DD.targets.pre_target) << endl;
             setOutput("need_turn_big_yaw", false);
             return NodeStatus::SUCCESS;
         }
@@ -95,7 +95,7 @@ public:
             std::pair<Target, double> best_detector_target = BestTarget(DD.targets.detector_targets_vector, DD.targets.detector_distance_vector, DD.pitch_mode);
             setOutput("have_target", best_detector_target.first);
             setOutput("need_turn_big_yaw", true);
-            cout << Target_to_str(best_detector_target.first) << endl;
+            cout << "感知相机选定目标: " << Target_to_str(best_detector_target.first) << " 编号: " << static_cast<int>(best_detector_target.first) << endl;
             return NodeStatus::SUCCESS;
         }
         else if (!DD.targets.targets_vector.empty() && DD.targets.detector_targets_vector.empty())
@@ -104,7 +104,7 @@ public:
             std::pair<Target, double> best_autoaim_target = BestTarget(DD.targets.targets_vector, DD.targets.targets_distance_vector, DD.pitch_mode);
             setOutput("have_target", best_autoaim_target.first);
             setOutput("need_turn_big_yaw", false);
-            cout << Target_to_str(best_autoaim_target.first) << endl;
+            cout << "自瞄选定目标: " << Target_to_str(best_autoaim_target.first) << " 编号: " << static_cast<int>(best_autoaim_target.first) << endl;
             return NodeStatus::SUCCESS;
         }
         else
@@ -116,13 +116,13 @@ public:
             {
                 setOutput("have_target", best_autoaim_target.first);
                 setOutput("need_turn_big_yaw", false);
-                cout << Target_to_str(best_autoaim_target.first) << endl;
+                cout << "综合选定自瞄目标: " << Target_to_str(best_autoaim_target.first) << " 编号: " << static_cast<int>(best_autoaim_target.first) << endl;
             }
             else
             {
                 setOutput("have_target", best_detector_target.first);
                 setOutput("need_turn_big_yaw", true);
-                cout << Target_to_str(best_detector_target.first) << endl;
+                cout << "综合选定感知目标: " << Target_to_str(best_detector_target.first) << " 编号: " << static_cast<int>(best_detector_target.first) << endl;
             }
 
             return NodeStatus::SUCCESS;
