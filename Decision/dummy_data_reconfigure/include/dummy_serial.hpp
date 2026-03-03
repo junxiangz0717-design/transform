@@ -81,7 +81,6 @@ private:
         bool RFID_TREATMENT = false;           // 补给区RFID检测状态
         bool is_no_ammo = false;               // 子弹耗尽
         int ammo = 300;                        // 允许发弹量
-        int restart_decision_game = 0;         // 重开决策比赛标志位
         int defence_base = 0;                  // 基地虚拟护盾
         int hp_base = 5000;                    // 基地血量
         int hp_outpost = 1500;                 // 前哨站血量

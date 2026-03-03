@@ -6,8 +6,6 @@
 
 ## 姿态
 uint8 posture
-
-uint8 az ##感知转头
 ## 是否由决策接管相对yaw角
 ## 置true时决策发的decision_yaw可以控制云台相对当前位置要转动的yaw
 ## 置false时不要使用decision_yaw，模拟云台相对yaw角被自瞄接管

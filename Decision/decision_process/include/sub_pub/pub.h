@@ -282,6 +282,7 @@ inline void MessagePublisher::pub_decision_to_autoaim()
         decision_send_autoaim_.decision_shoot_mode       = DD.targets.Shoot_Mode;
         decision_send_autoaim_.decide_yaw = DD.big_yaw;                                        // 发送当前云台大yaw 计算全局坐标
         decision_send_autoaim_.approachable_state_vector = DD.approachable_state(DD.enemy_hp); // 发送可攻击状态
+        decision_send_autoaim_.delta_yaw = DD.delta_yaw; // 发送大小yaw差值
         autoaim_pub->publish(decision_send_autoaim_);
     }
 

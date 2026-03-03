@@ -388,11 +388,9 @@ void DataSubscriber::serial_datas_callback(const msg_process::msg::ReceiveData::
         DD.is_no_ammo = 0;
         DD.can_respawn = int(serial_receive_data->can_free_respawn);
 
-        DD.small_yaw = serial_receive_data->small_yaw; // small_yaw角
+        DD.delta_yaw = serial_receive_data->delta_yaw; // delta_yaw角
 
         // 比赛信息
-        DD.restart_decision_game = int(serial_receive_data->restart_decision_game);
-
         DD.is_in_add_area = int(serial_receive_data->is_in_add_area); // 仅RMUL
 
         DD.is_in_fort = int(serial_receive_data->is_in_fort);

@@ -49,7 +49,6 @@ private:
         temp_data.radar_data.resize(12);
 
         // 数据赋值
-        temp_data.gyyaw = serial_data.gyyaw;
         temp_data.goalx = serial_data.goalx;
         temp_data.goaly = serial_data.goaly;
         temp_data.time = serial_data.time;
@@ -105,13 +104,10 @@ private:
         }
 
         temp_data.heat_1 = serial_data.heat_1;
-        temp_data.heat_2 = serial_data.heat_2;
-        temp_data.restart_decision_game = serial_data.restart_decision_game;
         temp_data.is_no_ammo = serial_data.is_no_ammo;
         temp_data.restart_mapping = serial_data.restart_mapping;
         temp_data.rune = (serial_data.event >> 3) & 1;
-        temp_data.autoaim_max = serial_data.autoaim_max;
-        temp_data.small_yaw = serial_data.small_yaw;
+        temp_data.delta_yaw = serial_data.delta_yaw;
         temp_data.vx = serial_data.vx;
         temp_data.vy = serial_data.vy;
 

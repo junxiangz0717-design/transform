@@ -16,11 +16,9 @@
 struct ReceiveData
 {
     // --- 运动与姿态数据 ---
-    float gyyaw;         ///< 陀螺仪 Yaw 轴角度 (绝对角)
     float goalx;         ///< 决策层/云台手给定的目标点 x 坐标
     float goaly;         ///< 决策层/云台手给定的目标点 y 坐标
-    float small_yaw;     ///< 云台小 Yaw 角 (相对于底盘/雷达坐标系，逆正顺负)
-    float autoaim_max;   ///< 自瞄 Yaw 轴极限标志: 0-未达到, 1-顺时针极限, 2-逆时针极限
+    float delta_yaw;     ///< 大小yaw差值
     float chassis_power; ///< 底盘实时功率 (W)
     float vx;            ///< 当前实时线速度 x
     float vy;            ///< 当前实时线速度 y
@@ -75,7 +73,6 @@ struct ReceiveData
     uint16_t heat_2;               ///< 17mm 枪口 2 实时热量
     uint16_t ammo;                 ///< 17mm 弹丸允许发弹量 (裁判系统剩余授权)
     uint8_t is_no_ammo;            ///< 空弹检测标志: 1-拨盘空转两圈，确认为无弹
-    uint8_t restart_decision_game; ///< 重启决策比赛标志位
     uint8_t restart_mapping;       ///< 重启导航建图标志位
 
     // --- 雷达标定信息 ---

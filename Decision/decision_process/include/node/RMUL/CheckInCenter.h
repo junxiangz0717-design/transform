@@ -35,6 +35,11 @@ public:
                 DD.posture = 2;
                 mes_puber->set_posture(DD.posture);
             }
+            else
+            {
+                DD.posture = 1;
+                mes_puber->set_posture(DD.posture);
+            }
         }
         else
         {

@@ -1,6 +1,3 @@
-## 陀螺仪yaw角
-float32 gyyaw
-
 ## 云台手的目标点x坐标
 float32 goalx
 ## 云台手的目标点y坐标
@@ -17,13 +14,6 @@ uint16 hp_outpost
 ## 颜色，0表示己方为红，1表示己方为蓝
 uint8 color
 
-## 是否开启建图
-uint8 is_mapping
-
-## 定位模块位置x
-float32 gps_x
-## 定位模块位置y
-float32 gps_y
 ## 测速模块朝向,单位：度。正北为 0 度
 float32 gps_yaw ##枪管yaw，即小yaw
 
@@ -104,20 +94,14 @@ uint8 style
 
 ## 电控算出来的枪口热量
 uint16 heat_1
-uint16 heat_2
 
 ## 电控测出无法发弹
 uint8 is_no_ammo
 
-## 电控控制重开决策比赛
-uint8 restart_decision_game
-
 ## 电控重启建图标志位
 uint8 restart_mapping
 
-float32 autoaim_max ##0未达到 1顺时针到达 2逆时针到达
-
-float32 small_yaw
+float32 delta_yaw ##大小yaw差角
 
 ## 能量机关
 uint8 rune 

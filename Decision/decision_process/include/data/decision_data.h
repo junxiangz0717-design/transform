@@ -33,7 +33,6 @@ public:
     Style style               = Style::NORMAL;        // 默认为NORMAL
     State state               = State::FINDING;       // 默认为FINDING
     int strategy              = 0;   
-    int restart_decision_game = 0;                    // 重启决策标志位 0：不重启 1：重启  这里是用于调试器重启，比赛过程不需要
     int time                  = 300;                  // 比赛剩余时间
     int game_period;                                  //比赛阶段
 //#######
@@ -88,7 +87,7 @@ public:
     ref_PointPtr self_pos = make_shared<ref_Point>(cur_x, cur_y); // 当前位置指针形式，用于语义地图
 
     double big_yaw{};  // 云台大yaw角 相对于地图坐标系
-    double small_yaw{};  // 云台小yaw角 相对于地图坐标系
+    double delta_yaw{};  // 大小yaw角差值
     int pitch_mode = 0; // 云台pitch角 0正常 1抬头只打前哨 2低头 3全
 
     int hp_thresholds = 230;        // 血量阈值

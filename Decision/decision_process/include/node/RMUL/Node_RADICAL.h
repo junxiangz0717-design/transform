@@ -76,7 +76,7 @@ public:
                 DD.to_rune = 0;
                 setOutput("subtree",subtree);   
             }
-            else if(DD.start_time <= 90)
+            else if(DD.start_time <= 90 && DD.is_center_area == 1)
             {
 
                 DD.state = State::FINDING;
@@ -86,8 +86,7 @@ public:
             }
             else 
             {
-                DD.state = State::FINDING;
-                subtree = "FIND_DEFENCE";
+                subtree = "TO_CENTER";
                 setOutput("subtree",subtree);
             }
         }

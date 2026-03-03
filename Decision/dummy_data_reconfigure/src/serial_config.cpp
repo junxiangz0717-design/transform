@@ -20,7 +20,6 @@ DummySerial::DummySerial()
     this->declare_parameter("RFID_TREATMENT", params_.RFID_TREATMENT);
     this->declare_parameter("is_no_ammo", params_.is_no_ammo);
     this->declare_parameter("ammo", params_.ammo);
-    this->declare_parameter("restart_decision_game", params_.restart_decision_game);
     this->declare_parameter("defence_base", params_.defence_base);
     this->declare_parameter("hp_base", params_.hp_base);
     this->declare_parameter("hp_outpost", params_.hp_outpost);
@@ -165,7 +164,6 @@ rcl_interfaces::msg::SetParametersResult DummySerial::param_callback(
             else if (name == "RFID_TREATMENT") params_.RFID_TREATMENT = param.as_bool();
             else if (name == "is_no_ammo") params_.is_no_ammo = param.as_bool();
             else if (name == "ammo") params_.ammo = param.as_int();
-            else if (name == "restart_decision_game") params_.restart_decision_game = param.as_int();
             else if (name == "defence_base") params_.defence_base = param.as_int();
             else if (name == "hp_base") params_.hp_base = param.as_int();
             else if (name == "hp_outpost") params_.hp_outpost = param.as_int();
@@ -301,7 +299,6 @@ void DummySerial::publish_data()
     serial_data.game_period = static_cast<uint8_t>(params_.game_period);
     serial_data.is_no_ammo = static_cast<uint8_t>(params_.is_no_ammo);
     serial_data.ammo = static_cast<uint16_t>(params_.ammo);
-    serial_data.restart_decision_game = static_cast<uint8_t>(params_.restart_decision_game);
     serial_data.success_home_buy_ammo = static_cast<uint16_t>(params_.success_home_buy_ammo);
     serial_data.success_remote_buy_ammo_times = static_cast<uint8_t>(params_.success_remote_buy_ammo_times);
     serial_data.success_remote_buy_hp_times = static_cast<uint8_t>(params_.success_remote_buy_hp_times);

@@ -94,10 +94,6 @@
                 <SubTree ID="TO_CENTER" subtree="{subtree}"/>
             </ForceSuccess>
 
-            <!-- <ForceSuccess>
-                <SubTree ID="FIND_DEFENCE" subtree="{subtree}"/>
-            </ForceSuccess> -->
-
             <ForceSuccess>
                 <SubTree ID="Treating" subtree="{subtree}"/>
             </ForceSuccess>
@@ -139,42 +135,6 @@
                                 input_string="{input_string}"/>
             <MoveToPoint name="移动到中心点" 
                          goal_points="{goal_points}" />
-        </MultiAsyncReactiveSequence>
-    </BehaviorTree>
-
-    <!-- <BehaviorTree ID="FIND_DEFENCE" name="保守行为">
-        <MultiAsyncReactiveSequence >
-            <Finding name="保守站桩判断"
-                     subtree="{subtree}"
-                     area="FIND_DEFENCE"/>
-            <Script name="导入目的点" 
-                    code="input_string='5.99,-0.82'"/>
-            <CoverIntFromString goal_points="{goal_points}" 
-                                input_string="{input_string}"/> 
-            <ForceSuccess>
-                <Fallback> 
-                    <CheckCondition name="判断是否跳过移动"
-                                    value="{value}"/>
-                    <Timeout name="移动超时器" msec="40000" >
-                        <Sequence>
-                            <MoveToPoint name="前往站桩点" 
-                                        goal_points="{goal_points}"/> 
-                        </Sequence> 
-                    </Timeout>
-                </Fallback>
-            </ForceSuccess> -->
-            
-            <Fallback>
-                <Sequence>
-                    <Script name="跳过移动" code="value = 1"/>
-                    <TimerOut time_="3000"
-                              type="0"/>
-                </Sequence>
-                
-                <Sequence>
-                    <Script name="允许移动" code="value = 0"/>
-                </Sequence>
-            </Fallback>
         </MultiAsyncReactiveSequence>
     </BehaviorTree>
 

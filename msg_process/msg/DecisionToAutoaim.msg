@@ -13,6 +13,9 @@ uint8[] approachable_state_vector
 ## 决策自身yaw角（决策坐标系下）
 float32 decide_yaw
 
+## 大小yaw差值
+float32 delta_yaw
+
 
 # 自瞄有默认击打顺序
 # 需要通过target调整残血顺序 和 approachable_state_vector帮助自瞄判断是否可以击打
