@@ -64,7 +64,7 @@ public:
     bool is_in_block ;          //是否在斜坡
     int ammo_thresholds = 10;
     int is_in_fort = 0;         //是否在堡垒
-    int base_spin_mode = 0;     //底盘小陀螺旋转标志位 0停止 1逆时针 2顺时针 3变速   ###目前弃用，通过decision_mode控制
+    int base_spin_mode = 0;     //底盘小陀螺旋转标志位 0停止 1快速 2中速 3变速
     Tripod_Spin tripod_spin = Tripod_Spin::PI; // 云台自旋模式
 
     std::chrono::system_clock::time_point death_time;

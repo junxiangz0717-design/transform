@@ -120,6 +120,22 @@ private:
         // 假设 msg_process/msg/ReceiveData 中 radar_data 是 float[] 数组
         std::copy(serial_data.radar_data, serial_data.radar_data + 12, temp_data.radar_data.begin());
 
+        // 电控信息
+        temp_data.x_data = serial_data.x_data;
+        temp_data.y_data = serial_data.y_data;
+        temp_data.rotation_state = serial_data.rotationState;
+        temp_data.temp_x = serial_data.temp_x;
+        temp_data.temp_y = serial_data.temp_y;
+        temp_data.temp_theta = serial_data.temp_theta;
+        temp_data.speed_x = serial_data.speed_X;
+        temp_data.speed_y = serial_data.speed_Y;
+        temp_data.speed_z = serial_data.speed_Z;
+        temp_data.wheel_state1 = serial_data.wheel_state1;
+        temp_data.wheel_state2 = serial_data.wheel_state2;
+        temp_data.wheel_state3 = serial_data.wheel_state3;
+        temp_data.wheel_state4 = serial_data.wheel_state4;
+
+
         /** 数据合法性校验 **/
         bool is_empty = true;
         for (int i = 0; i < 12; ++i)
@@ -151,7 +167,6 @@ private:
     rclcpp::Publisher<msg_process::msg::ReceiveData>::SharedPtr serial_receive_data_pub_;
     rclcpp::Publisher<msg_process::msg::ReceiveData>::SharedPtr serial_error_data_pub_;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr can_exec_pub_;
-    rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr map_mode_pub_;
     msg_process::msg::ReceiveData empty_data_;
 };
 

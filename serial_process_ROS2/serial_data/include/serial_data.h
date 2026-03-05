@@ -78,6 +78,22 @@ struct ReceiveData
     // --- 雷达标定信息 ---
     float radar_data[12]; ///< 雷达标定数组（与 msg_process/ReceiveData.msg 对齐）
 
+    // --- 电控保存 ---
+    float x_data;
+	float y_data;
+	float rotationState;
+	float temp_x;
+	float temp_y;
+	float temp_theta;
+	float speed_X;
+	float speed_Y;
+	float speed_Z;
+	uint8_t wheel_state1;
+	uint8_t wheel_state2;
+	uint8_t wheel_state3;
+	uint8_t wheel_state4;
+
+
     // --- 预留与扩展 ---
     uint32_t sentry_info;  ///< 哨兵自定义信息位 1
     uint16_t sentry_info2; ///< 哨兵自定义信息位 2
@@ -92,7 +108,6 @@ struct SendData
 {
     uint8_t head = 0x99;            ///< 帧头 (固定为 0x99)
     uint8_t spin_mode;              ///< 底盘小陀螺模式控制
-    uint8_t tripod_spin;            ///< 云台自动 360 度搜索自转标志
     float decision_yaw_az;          ///< 决策控制云台转动的相对 Yaw 角速度 (逆时针为正)
     float vx;                       ///< 路径规划给出的线速度 x (m/s)
     float vy;                       ///< 路径规划给出的线速度 y (m/s)

@@ -20,10 +20,10 @@ public:
     {
         if(DD.game_period != 4 && !DD.config_is_skip_gamestart)
         {
-            mes_puber->pathplan_base_tripod(2,0);//2关
+            mes_puber->set_base_tripod_spin(0);//0关
             return NodeStatus::SUCCESS;
         }
-        else if(DD.in_hit == 0){mes_puber->pathplan_base_tripod(6,0);}//6慢速
+        else if(DD.in_hit == 0){mes_puber->set_base_tripod_spin(2);}//2慢速
     
         else
         {   
@@ -33,8 +33,8 @@ public:
                 mes_puber->set_posture(DD.posture);
             }
              
-            mes_puber->pathplan_base_tripod(0,0);
-        }//0快速
+            mes_puber->set_base_tripod_spin(1);
+        }//1快速
         return NodeStatus::SUCCESS;
     }
 };

@@ -143,3 +143,18 @@ uint8 is_disengaged
 float32 vx
 float32 vy
 
+## 电控信息
+float32 x_data
+float32 y_data
+float32 rotation_state
+float32 temp_x
+float32 temp_y
+float32 temp_theta
+float32 speed_x
+float32 speed_y
+float32 speed_z
+uint8 wheel_state1
+uint8 wheel_state2
+uint8 wheel_state3
+uint8 wheel_state4
+

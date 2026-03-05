@@ -26,27 +26,7 @@
 
 bool can_arrive_flag = true;
 bool pre_can_arrive_flag = true;
-// struct ContainsApproximatePoint {
-//     float targetX;
-//     float targetY;
-//     float epsilon;  // 容差值
 
-//     ContainsApproximatePoint(float x, float y, float eps = 1e-3f)
-//         : targetX(x), targetY(y), epsilon(eps) {}
-
-//     bool operator()(const std::deque<std::pair<float,float>>& q) const {
-//         for (const auto& point : q) {
-//             // 检查两点之间的欧氏距离是否小于容差
-//             float dx = point.first - targetX;
-//             float dy = point.second - targetY;
-//             if (std::sqrt(dx*dx + dy*dy) < epsilon) {
-//                 return true;
-//             }
-//         }
-//         return false;
-//     }
-// };
-// ContainsApproximatePoint checker(0.0f, 0.0f, 1e-2f);
 class DataSubscriber
 {
 private:
@@ -326,7 +306,6 @@ void DataSubscriber::serial_datas_callback(const msg_process::msg::ReceiveData::
         if (DD.config_is_serial_hp && DD.game_period == 4)
         {
             DD.enemy_hero_hp = DD.set_hero.updateHealth(serial_receive_data->enemy_hero_hp);
-            // 工程？
             // int a=DD.set_engineer.updateHealth(serial_receive_data->enemy_engineer_hp);int b= serial_receive_data->enemy_engineer_hp ;
             DD.enemy_engineer_hp = DD.set_engineer.updateHealth(serial_receive_data->enemy_engineer_hp);
             DD.enemy_foot_3_hp = DD.set_foot_3.updateHealth(serial_receive_data->enemy_foot_3_hp);

@@ -1,8 +1,0 @@
-<launch>
-  <node name="decision_process" pkg="decision_process" type="decision_process"  launch-prefix="gnome-terminal -- bash -c"   />
-  <include file="$(find dummy_data_reconfigure)/launch/rqt.launch" />
-  <include file="$(find sentry_gazebo)/launch/startup_pf_ppc.launch" />
-</launch>
-
-
-

@@ -116,15 +116,13 @@ public:
             if(target_index < 0 || target_index >= static_cast<int>(DD.enemy_hp.size())){continue;}
             if((DD.target_list[DD.priority][target_index] ==0)||(target_index != 0 && target_index != 2 && target_index != 6)){continue;}
             double distance  = targets_distance_vector[target_index];
-            int hp = DD.enemy_hp[target_index];
-            if(distance >= 7.0)continue;
-            else if(distance < 7.0 && distance >= 5.5)score += 300;
+            if(distance >= 5.0)continue;
+            else if(distance < 5.0 && distance >= 2.5)score += 300;
             else 
             {
                 score += 600;
                 score += distance;
             }
-            if(hp < 120){score += 1000;}
             score += DD.target_list[DD.priority][target_index];
             if (score > max_score) 
             {

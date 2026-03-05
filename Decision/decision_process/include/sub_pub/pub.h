@@ -29,16 +29,12 @@ private:
     rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr way_point_pub;
     rclcpp::Publisher<msg_process::msg::DecisionToAutoaim>::SharedPtr autoaim_pub;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr stop_pub;
-    rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr move_mode_pub;
-    rclcpp::Publisher<std_msgs::msg::Int8>::SharedPtr map_mode_pub;
     rclcpp::Publisher<msg_process::msg::DecisionMsg>::SharedPtr decision_data_pub;
 
     std::shared_ptr<rclcpp::Node> node_;
 
     std_msgs::msg::Bool stop_;
 
-    std_msgs::msg::Int8 move_mode_data_;
-    std_msgs::msg::Int8 map_mode_data_;
 
     msg_process::msg::DecisonSendData decision_send_data_;
     msg_process::msg::DecisionToAutoaim decision_send_autoaim_;
@@ -68,7 +64,6 @@ public:
         way_point_pub = node_->create_publisher<geometry_msgs::msg::PoseStamped>("/goal_pose", 50);
         // 下面不发给导航
         stop_pub = node_->create_publisher<std_msgs::msg::Bool>("/stop", 50);
-        move_mode_pub = node_->create_publisher<std_msgs::msg::Int8>("/decision_mode", 1); // 0小陀螺开 2关 1慢速  //给导航的移动模式
 
         pursuit_data_pub = node_->create_publisher<msg_process::msg::PursuitData>("/pursuit_data", 100);  // 用于rosbag回放作日志分析
         decision_data_pub = node_->create_publisher<msg_process::msg::DecisionMsg>("/decision_data", 50); // 用于rosbag回放作日志分析
@@ -107,59 +102,6 @@ public:
         decision_data_pub->publish(decision_data_);
     }
 
-    inline void pathplan_base_tripod(int move_mode, int tripod_spin)
-    {
-        try
-        {
-            switch (move_mode)
-            {
-            case 0:
-                decision_send_data_.spin_mode = 1;
-                move_mode_data_.data = 0;
-                cout << "开小陀螺-快速移动" << endl;
-                break;
-            case 1:
-                decision_send_data_.spin_mode = 1;
-                move_mode_data_.data = 1;
-                cout << "开小陀螺-追击" << endl;
-                break;
-            case 2:
-                decision_send_data_.spin_mode = 0;
-                move_mode_data_.data = 2;
-                cout << "关小陀螺-快速移动" << endl;
-                break;
-            case 6:
-                decision_send_data_.spin_mode = 0;
-                move_mode_data_.data = 6;
-                break;
-            default:
-                decision_send_data_.spin_mode = 1;
-                move_mode_data_.data = 0;
-                cout << "开小陀螺-快速移动" << endl;
-            }
-            move_mode_pub->publish(move_mode_data_);
-            decision_send_data_.tripod_spin = tripod_spin;
-        }
-        catch (const std::exception &e)
-        {
-            zh_log.error("pathplan_base_tripod error");
-            zh_log.error(e.what());
-        }
-    }
-    inline void move_mode(int a)
-    {
-        try
-        {
-            move_mode_data_.data = a;
-            move_mode_pub->publish(move_mode_data_);
-        }
-        catch (const std::exception &e)
-        {
-            zh_log.error("move_mode error");
-            zh_log.error(e.what());
-        }
-    }
-
     inline void pub_decision_point(const double x, const double y) // 给导航发点
     {
         try
@@ -185,7 +127,7 @@ public:
         }
     }
 
-    void set_base_tripod_spin(int base, Tripod_Spin tripod);
+    void set_base_tripod_spin(int base, int tripod_spin);
 
     void set_posture(int posture);
 
@@ -201,12 +143,12 @@ public:
     vector<float> randdom_point(const float &radius, const float &x, const float &y);
 };
 
-inline void MessagePublisher::set_base_tripod_spin(int base, Tripod_Spin tripod)
+inline void MessagePublisher::set_base_tripod_spin(int base)
 {
     try
     {
-        decision_send_data_.spin_mode = base; // 给电控的小陀螺标志位1开2关0默认
-        decision_send_data_.tripod_spin = static_cast<int>(tripod);
+        decision_send_data_.spin_mode = base; // 给电控的小陀螺标志位0关 1快速 2中速 3变速
+        // decision_send_data_.tripod_spin = static_cast<uint8_t>(tripod_spin);
     }
     catch (const std::exception &e)
     {
