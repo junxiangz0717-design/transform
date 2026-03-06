@@ -155,7 +155,7 @@ decision_behaviortree::decision_behaviortree(int delay_milsec):delay_milsec_(del
                 factory.registerNodeType<CheckWaitRespawn>("CheckWaitRespawn");
                 factory.registerNodeType<SetCheckHpParam>("SetCheckHpParam");
                 factory.registerNodeType<SetTarget>("SetTarget");
-                factory.registerNodeType<SetTarget_QQ>("SetStrategy_QQ");
+                factory.registerNodeType<SetTarget_QQ>("SetTarget_QQ");
                 factory.registerNodeType<SetStrategy>("SetStrategy_UL");
                 // factory.registerNodeType<SetStrategy>("SetStrategy");
                 // factory.registerNodeType<SetStyle>("SetStyle");
