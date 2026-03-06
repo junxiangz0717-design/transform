@@ -29,7 +29,7 @@
             <CheckWaitRespawn name="等待复活检查"/> 
             <CheckHp    name="血量检查"/>
             <CheckHit name="受击检查"/>
-            <SetTarget  name="锁定目标"
+            <SetTarget_QQ  name="锁定目标"
                         need_turn_big_yaw="{need_turn_big_yaw}"
                         have_target="{have_target}"/>
             <!-- <SubTree ID="PURSUITING"
@@ -55,7 +55,7 @@
                                     value="{value}"/>
                     <Timeout name="移动超时器" msec="5000">
                         <Sequence>
-                            <Adaptive_qingqing name="自适应距离"
+                            <Adaptive_QQ name="自适应距离"
                                       goal_points="{goal_points}"/>
                             <MoveToPoint_pursuit name="前往追击点" 
                                                  goal_points="{goal_points}"/> 

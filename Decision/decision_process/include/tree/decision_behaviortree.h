@@ -21,9 +21,10 @@
 
 // qingqing
 #include "node/qingqing/Adaptive.h"
+#include "node/qingqing/SetTarget.h"
 
 // RMUL
-// #include "node/RMUL/Adaptive.h"
+#include "node/RMUL/Adaptive.h"
 #include "node/RMUL/AdaptiveChoose.h"
 #include "node/RMUL/Attack.h"
 #include "node/RMUL/BackHome.h"
@@ -154,6 +155,7 @@ decision_behaviortree::decision_behaviortree(int delay_milsec):delay_milsec_(del
                 factory.registerNodeType<CheckWaitRespawn>("CheckWaitRespawn");
                 factory.registerNodeType<SetCheckHpParam>("SetCheckHpParam");
                 factory.registerNodeType<SetTarget>("SetTarget");
+                factory.registerNodeType<SetTarget_QQ>("SetStrategy_QQ");
                 factory.registerNodeType<SetStrategy>("SetStrategy_UL");
                 // factory.registerNodeType<SetStrategy>("SetStrategy");
                 // factory.registerNodeType<SetStyle>("SetStyle");
@@ -185,6 +187,7 @@ decision_behaviortree::decision_behaviortree(int delay_milsec):delay_milsec_(del
                 factory.registerNodeType<Treat>("Treat");
                 factory.registerNodeType<TimerOut>("TimerOut");
                 factory.registerNodeType<Adaptive>("Adaptive");
+                factory.registerNodeType<Adaptive_QQ>("Adaptive_QQ");
                 factory.registerNodeType<AdaptiveChoose>("AdaptiveChoose");
                 factory.registerNodeType<ToCenter>("ToCenter");
                 factory.registerNodeType<CheckInCenter>("CheckInCenter");

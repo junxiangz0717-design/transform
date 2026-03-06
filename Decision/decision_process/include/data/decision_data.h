@@ -353,10 +353,10 @@ inline bool decision_data::is_arrived_point( const double& cur_x, const double& 
     RCLCPP_INFO(rclcpp::get_logger("rclcpp"),"distence_to_goal: %f",dis_to_goal);
     if(dis_to_goal<reach_goal_dis_)
     {
-        DD.is_arrive = true;
+        is_arrive = true;
         return true;
     }
-    DD.is_arrive = false;
+    is_arrive = false;
     return false;
 }
 

@@ -14,7 +14,7 @@
 using namespace std;
 using namespace BT;
 
-class Adaptive : public SyncActionNode
+class Adaptive_QQ : public SyncActionNode
 {
 private:
     vector<double> point;

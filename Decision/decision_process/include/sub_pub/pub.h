@@ -127,7 +127,7 @@ public:
         }
     }
 
-    void set_base_tripod_spin(int base, int tripod_spin);
+    void set_base_tripod_spin(int base);
 
     void set_posture(int posture);
 

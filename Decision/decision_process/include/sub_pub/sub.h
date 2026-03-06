@@ -13,7 +13,6 @@
 #include "msg_process/msg/pursuit.hpp"
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/twist.hpp>
-#include "action_msgs/msg/goal_status_array.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 #include <cmath>
