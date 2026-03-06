@@ -69,13 +69,6 @@ public:
             setOutput("need_turn_big_yaw", false);
             return NodeStatus::SUCCESS;
         }
-        // if(DD.targets.pre_target != Target::UNKNOW && DD.targets.pre_target != Target::NONE && DD.targets.autoaim_target == 0)
-        // {
-        //     cout<<"自瞄误识别"<<endl;
-        //     setOutput("have_target", DD.targets.pre_target);
-        //     setOutput("need_turn_big_yaw", false);
-        //     return NodeStatus::SUCCESS;
-        // }
         if (DD.targets.autoaim_target != 7)
         {
             DD.targets.pre_target = static_cast<Target>(DD.targets.autoaim_target);

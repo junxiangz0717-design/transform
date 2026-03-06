@@ -32,9 +32,10 @@
             <SetTarget  name="锁定目标"
                         need_turn_big_yaw="{need_turn_big_yaw}"
                         have_target="{have_target}"/>
-            <ScanToArea name="自适应搜寻"
-                        have_target="{have_target}"/>
-            
+            <!-- <SubTree ID="PURSUITING"
+                    have_target="{have_target}"
+                    need_turn_big_yaw="{need_turn_big_yaw}"/> -->
+                
         </MultiAsyncReactiveSequence>
     </BehaviorTree>
 
@@ -54,7 +55,7 @@
                                     value="{value}"/>
                     <Timeout name="移动超时器" msec="5000">
                         <Sequence>
-                            <Adaptive name="自适应距离"
+                            <Adaptive_qingqing name="自适应距离"
                                       goal_points="{goal_points}"/>
                             <MoveToPoint_pursuit name="前往追击点" 
                                                  goal_points="{goal_points}"/> 
@@ -63,7 +64,7 @@
                 </Fallback>
             </ForceSuccess>
 
-            <Fallback>
+            <!-- <Fallback>
                 <Sequence>
                     <Script name="跳过移动" code="value = 1"/>
                     <TimerOut time_="500"
@@ -73,7 +74,7 @@
                 <Sequence>
                     <Script name="允许移动" code="value = 0"/>
                 </Sequence>
-            </Fallback>
+            </Fallback> -->
         </MultiAsyncReactiveSequence>
     </BehaviorTree> 
 </root>
