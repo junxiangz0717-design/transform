@@ -70,7 +70,6 @@ struct ReceiveData
     uint32_t RFID;                 ///< RFID 状态位 (RMUC 哨兵巡逻区检测)
     uint32_t event;                ///< 场地事件汇总位
     uint16_t heat_1;               ///< 17mm 枪口 1 实时热量
-    uint16_t heat_2;               ///< 17mm 枪口 2 实时热量
     uint16_t ammo;                 ///< 17mm 弹丸允许发弹量 (裁判系统剩余授权)
     uint8_t is_no_ammo;            ///< 空弹检测标志: 1-拨盘空转两圈，确认为无弹
     uint8_t restart_mapping;       ///< 重启导航建图标志位

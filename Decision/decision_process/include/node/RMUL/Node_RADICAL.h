@@ -69,11 +69,10 @@ public:
         {
             cout<<":::"<<have_target<<endl;
             cout<<":::"<<DD.is_pursuiting <<endl;
-            if((have_target != Target::NONE || DD.is_pursuiting == 1) && (!DD.is_in_block || DD.is_arrive))
+            if((have_target != Target::NONE || DD.is_pursuiting == 1) && DD.is_arrive)
             {
                 DD.state = State::ATTACKING;
                 subtree = "PURSUITING";
-                DD.to_rune = 0;
                 setOutput("subtree",subtree);   
             }
             else if(DD.start_time <= 90 && DD.is_center_area == 1)

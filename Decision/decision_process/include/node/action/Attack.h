@@ -87,24 +87,3 @@ public:
         return NodeStatus::SUCCESS;
     }
 };
-
-// inline double Attack::normalize_angle(double angle) 
-// {
-//     // 将角度标准化到 -180 到 180 之间
-//     while (angle > 180.0) {
-//         angle -= 360.0;
-//     }
-//     while (angle < -180.0) {
-//         angle += 360.0;
-//     }
-//         return angle;
-// }
-
-// inline double Attack::calculate_min_rotation(double yaw_large, double yaw_small) 
-// {
-//     // 计算大yaw和小yaw的差值
-//     double yaw_diff = yaw_large - yaw_small;
-
-//     // 计算最小旋转角度，标准化到 -180 到 180 之间
-//     return normalize_angle(yaw_diff);
-// }

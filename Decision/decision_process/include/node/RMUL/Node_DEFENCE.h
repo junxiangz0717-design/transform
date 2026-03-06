@@ -49,9 +49,18 @@ public:
             subtree = "TREATING";
             setOutput("subtree",subtree);
         }
-        else if(DD.rush == 1 && ( DD.is_center_area == 2 || DD.is_center_area == 3))
-        {  
-            if((have_target == Target::HERO || DD.is_pursuiting == 1) && DD.is_arrive)
+        else if(DD.rush == 1)
+        {
+            if(DD.is_center_area == 2 || DD.is_center_area == 3)
+            {
+                subtree = "TO_CENTER";
+                setOutput("subtree",subtree);
+            }
+            else
+            {
+
+            }
+            else if((have_target == Target::HERO || DD.is_pursuiting == 1) && DD.is_arrive)
             {
                 {
                     DD.state = State::ATTACKING;

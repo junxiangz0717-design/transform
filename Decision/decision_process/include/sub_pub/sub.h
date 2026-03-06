@@ -13,6 +13,7 @@
 #include "msg_process/msg/pursuit.hpp"
 #include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include "action_msgs/msg/goal_status_array.hpp"
 #include "rclcpp/rclcpp.hpp"
 
 #include <cmath>
@@ -30,13 +31,9 @@ bool pre_can_arrive_flag = true;
 class DataSubscriber
 {
 private:
-    // rclcpp::Subscriber step_blocked_sub; RMUL用不到
-    // rclcpp::Subscriber is_down_step_sub; RMUL用不到
-
     rclcpp::Subscription<msg_process::msg::ReceiveData>::SharedPtr serial_datas_sub;
     rclcpp::Subscription<msg_process::msg::AutoaimToDecision>::SharedPtr autoaim_datas_sub;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr cur_pos_datas_sub;
-    rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr is_arrive_sub;
     rclcpp::Subscription<msg_process::msg::Pursuit>::SharedPtr pursuit_sub; // 仿真用
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr is_block_sub;
 
@@ -49,7 +46,6 @@ public:
     void serial_datas_callback(const msg_process::msg::ReceiveData::SharedPtr &serial_receive_data);
     void autoaim_datas_callback(const msg_process::msg::AutoaimToDecision::SharedPtr &autoaim_to_decision_data);
     void cur_pos_datas_callback(const nav_msgs::msg::Odometry::SharedPtr &odom_datas);
-    void is_arrive_callback(const std_msgs::msg::Bool::SharedPtr &is_arrive_data);
     void pursuit_callback(const msg_process::msg::Pursuit::SharedPtr &pursuit_data);
     void inblock_callback(const std_msgs::msg::Bool::SharedPtr &in_block_data);
 };
@@ -76,13 +72,6 @@ DataSubscriber::DataSubscriber(std::shared_ptr<rclcpp::Node> node) : node_(node)
         [this](nav_msgs::msg::Odometry::SharedPtr msg)
         {
             this->cur_pos_datas_callback(msg);
-        });
-
-    is_arrive_sub = node_->create_subscription<std_msgs::msg::Bool>(
-        "/is_arrive", 10,
-        [this](std_msgs::msg::Bool::SharedPtr msg)
-        {
-            this->is_arrive_callback(msg);
         });
 
     pursuit_sub = node_->create_subscription<msg_process::msg::Pursuit>(
@@ -122,11 +111,6 @@ void DataSubscriber::pursuit_callback(const msg_process::msg::Pursuit::SharedPtr
     DD.xx = pursuit_data->x;
     DD.yy = pursuit_data->y;
     DD.pub = 1;
-}
-
-void DataSubscriber::is_arrive_callback(const std_msgs::msg::Bool::SharedPtr &is_arrive_data)
-{
-    DD.is_arrive = is_arrive_data->data;
 }
 
 void DataSubscriber::autoaim_datas_callback(const msg_process::msg::AutoaimToDecision::SharedPtr &autoaim_to_decision_data)
