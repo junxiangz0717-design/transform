@@ -17,12 +17,12 @@ class SetTarget_QQ : public SyncActionNode
 private:
     int restart_count=0;
 public:
-    SetTarget(const string &name, const NodeConfig &config) : SyncActionNode(name, config)
+    SetTarget_QQ(const string &name, const NodeConfig &config) : SyncActionNode(name, config)
     {
         setOutput("need_turn_big_yaw", false);
     }
     
-    ~SetTarget() override = default;
+    ~SetTarget_QQ() override = default;
 
     static PortsList providedPorts()
     {

@@ -220,7 +220,7 @@ public:
 
     decision_data();
 
-    bool is_arrived_point(const double& cur_x, const double& cur_y, const double& goal_x, const double& goal_y) const;//判断是否到达目标点
+    bool is_arrived_point(const double& cur_x, const double& cur_y, const double& goal_x, const double& goal_y);//判断是否到达目标点
 
     bool is_approachable(const Target &id) const;//判断单个目标是否可攻击
 
@@ -341,7 +341,7 @@ inline double decision_data::normalize_angle(const double &my_angle) const
         return angle;
 }
 
-inline bool decision_data::is_arrived_point( const double& cur_x, const double& cur_y, const double& goal_x, const double& goal_y ) const
+inline bool decision_data::is_arrived_point( const double& cur_x, const double& cur_y, const double& goal_x, const double& goal_y )
 {
     double dis_to_goal;
     double x_dir = cur_x - goal_x;

@@ -56,10 +56,6 @@ public:
                 subtree = "TO_CENTER";
                 setOutput("subtree",subtree);
             }
-            else
-            {
-
-            }
             else if((have_target == Target::HERO || DD.is_pursuiting == 1) && DD.is_arrive)
             {
                 {

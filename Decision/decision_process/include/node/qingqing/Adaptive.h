@@ -24,8 +24,8 @@ private:
     pair<double, double> target;
 
 public:
-    Adaptive(const std::string &name, const NodeConfig &config) : SyncActionNode(name, config) {}
-    ~Adaptive() override = default;
+    Adaptive_QQ(const std::string &name, const NodeConfig &config) : SyncActionNode(name, config) {}
+    ~Adaptive_QQ() override = default;
     static PortsList providedPorts()
     {
         return {OutputPort<vector<double>>("goal_points", "追击点")};
