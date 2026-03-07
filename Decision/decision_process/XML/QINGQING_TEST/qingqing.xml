@@ -46,6 +46,44 @@
                     need_turn_big_yaw="{need_turn_big_yaw}"/>
     </BehaviorTree>
 
+    <!-- 发点测试 -->
+    <BehaviorTree ID="GOAL_POINT" name="发点">
+        <MultiAsyncReactiveSequence >
+            <Scripts name="设置发点"
+                code="input_string='11.73,7.79
+                                    11.66,3.04'"/>
+            <MoveToPoint name="前往发点" 
+                        goal_points="{goal_points}"/>
+            <CoverIntFromString goal_points="{goal_points}" 
+                                input_string="{input_string}"/> 
+            <ForceSuccess>
+                <Fallback> 
+                    <CheckCondition name="判断是否跳过移动"
+                                    value="{value}"/>
+                    <Timeout name="移动超时器" msec="40000" >
+                        <Sequence>
+                            <MoveToPoint name="前往站桩点" 
+                                        goal_points="{goal_points}"/> 
+                        </Sequence> 
+                    </Timeout>
+                </Fallback>
+            </ForceSuccess>
+            
+            <Fallback>
+                <Sequence>
+                    <Script name="跳过移动" code="value = 1"/>
+                    <TimerOut time_="2500"
+                              type="0"/>
+                </Sequence>
+                
+                <Sequence>
+                    <Script name="允许移动" code="value = 0"/>
+                </Sequence>
+            </Fallback>
+        </MultiAsyncReactiveSequence>
+        
+    </BehaviorTree>
+
     <!-- 追击测试 -->
     <BehaviorTree ID="PURSUITING" name="追击">
         <MultiAsyncReactiveSequence >
@@ -64,7 +102,7 @@
                 </Fallback>
             </ForceSuccess>
 
-            <!-- <Fallback>
+            <Fallback>
                 <Sequence>
                     <Script name="跳过移动" code="value = 1"/>
                     <TimerOut time_="500"
@@ -74,7 +112,7 @@
                 <Sequence>
                     <Script name="允许移动" code="value = 0"/>
                 </Sequence>
-            </Fallback> -->
+            </Fallback>
         </MultiAsyncReactiveSequence>
     </BehaviorTree> 
 </root>
