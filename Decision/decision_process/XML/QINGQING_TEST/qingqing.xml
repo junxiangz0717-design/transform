@@ -49,7 +49,7 @@
     <!-- 发点测试 -->
     <BehaviorTree ID="GOAL_POINT" name="发点">
         <MultiAsyncReactiveSequence >
-            <Scripts name="设置发点"
+            <Script name="设置发点"
                 code="input_string='11.73,7.79
                                     11.66,3.04'"/>
             <MoveToPoint name="前往发点" 
