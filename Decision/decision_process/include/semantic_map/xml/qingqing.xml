@@ -16,7 +16,7 @@
                 <!-- 所在区域 -->
                 <己方半区 code="Rectangle(16.5,0.1,6.0,8.0)"     Center="16.5,0.1"/>
                 <中央高地 code="Rectangle(9.6,0.0,8.0,8.0)"      Center="9.6,0.0"/>
-                <敌方平地 code="Rectangle(2.5.0.0,6.0,8.0)"      Center="2.5,0.0"/>
+                <敌方平地 code="Rectangle(2.5,0.0,6.0,8.0)"      Center="2.5,0.0"/>
                 <中央    type="MixArea" areas="敌方平地+中央高地"/>
                 <其他    type="MixArea" areas="地图内-己方半区-中央高地-敌方平地"/>
                 <!--  -->
@@ -28,10 +28,10 @@
             <!--  --> 
 
             <!-- 前哨相关 -->
-            <前哨击打区 code="Circle(9.0,1.0.4,2.0)"/>
+            <前哨击打区 code="Circle(9.0,1.04,2.0)"/>
 
             <!-- 状态相关 -->
             
         </Areas>
-    </qingiqng>
+    </qingqing>
 </semantic_map>

@@ -250,8 +250,8 @@ void AreaManager::init()
     
     XMLDocument doc;
     // 加载xml并输出加载状态
-    // auto status = doc.LoadFile((DECISION_PACKAGE_PATH_SEMNATIC_MAP_XML+"/26_RMUL.xml").c_str());//
-    auto status = doc.LoadFile((DECISION_PACKAGE_PATH_SEMNATIC_MAP_XML+"/qingqing.xml").c_str());//
+    auto status = doc.LoadFile((DECISION_PACKAGE_PATH_SEMNATIC_MAP_XML+"/26_RMUL.xml").c_str());//
+    // auto status = doc.LoadFile((DECISION_PACKAGE_PATH_SEMNATIC_MAP_XML+"/qingqing.xml").c_str());//
     cout << DECISION_PACKAGE_PATH_SEMNATIC_MAP_XML<<"/26_RMUL.xml加载状态：" << XMLDocument::ErrorIDToName(status) << endl;
     if (status != XML_SUCCESS) return;
     
